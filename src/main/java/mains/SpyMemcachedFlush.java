@@ -1,6 +1,6 @@
 package mains;
 
-import utils.SpyMemcacheClient;
+import utils.SpyMemcachedClient;
 
 /**
  * 全ての値を削除.
@@ -18,10 +18,10 @@ public class SpyMemcachedFlush {
 		System.out.println("■start.");
 		try {
 			// クライアントを取得
-			SpyMemcacheClient spyMemcacheClient = new SpyMemcacheClient();
+			SpyMemcachedClient spyMemcachedClient = new SpyMemcachedClient();
 
 			// 全ての値を削除
-			if (spyMemcacheClient.flush()) {
+			if (spyMemcachedClient.flush()) {
 				System.out.println("flushに成功");
 			} else {
 				System.err.println("flushに失敗");

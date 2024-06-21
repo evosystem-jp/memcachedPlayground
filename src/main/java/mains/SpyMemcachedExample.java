@@ -1,6 +1,6 @@
 package mains;
 
-import utils.SpyMemcacheClient;
+import utils.SpyMemcachedClient;
 
 /**
  * SpyMemcachedテスト.
@@ -18,21 +18,21 @@ public class SpyMemcachedExample {
 		System.out.println("■start.");
 		try {
 			// クライアントを取得
-			SpyMemcacheClient spyMemcacheClient = new SpyMemcacheClient();
+			SpyMemcachedClient spyMemcachedClient = new SpyMemcachedClient();
 
 			// バージョンを取得
-			System.out.println(spyMemcacheClient.getVersions());
+			System.out.println(spyMemcachedClient.getVersions());
 
 			// statsを取得
-			System.out.println(spyMemcacheClient.getStats());
+			System.out.println(spyMemcachedClient.getStats());
 
 			// 値を設定
 			String key = "exampleKey";
 			String value = "exampleValue";
-			spyMemcacheClient.setValue(key, value);
+			spyMemcachedClient.setValue(key, value);
 
 			// 値を取得
-			System.out.println(spyMemcacheClient.getValue(key));
+			System.out.println(spyMemcachedClient.getValue(key));
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

@@ -10,6 +10,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import org.apache.commons.lang3.StringUtils;
+
 import constants.Configurations;
 import net.spy.memcached.ConnectionFactoryBuilder;
 import net.spy.memcached.FailureMode;
@@ -18,11 +20,11 @@ import net.spy.memcached.auth.AuthDescriptor;
 import net.spy.memcached.auth.PlainCallbackHandler;
 
 /**
- * SpyMemcacheClient.
+ * SpyMemcachedClient.
  * 
  * @author evosystem
  */
-public class SpyMemcacheClient {
+public class SpyMemcachedClient {
 
 	/**
 	 * MemcachedClient.
@@ -42,7 +44,7 @@ public class SpyMemcacheClient {
 	/**
 	 * クライアントを取得.
 	 */
-	public SpyMemcacheClient() {
+	public SpyMemcachedClient() {
 		try {
 			ConnectionFactoryBuilder builder = new ConnectionFactoryBuilder()
 					.setProtocol(ConnectionFactoryBuilder.Protocol.BINARY)
@@ -50,9 +52,12 @@ public class SpyMemcacheClient {
 					.setDaemon(true)
 					.setOpTimeout(CONNECTION_TIMEOUT)
 					.setMaxReconnectDelay(CONNECTION_TIMEOUT)
-					.setFailureMode(FailureMode.Retry)
-					.setAuthDescriptor(new AuthDescriptor(new String[] { "PLAIN" }, new PlainCallbackHandler(
-							Configurations.MEMCACHED_USERNAME, Configurations.MEMCACHED_PASSWORD)));
+					.setFailureMode(FailureMode.Retry);
+			if (StringUtils.isNotBlank(Configurations.MEMCACHED_USERNAME)
+					|| StringUtils.isNotBlank(Configurations.MEMCACHED_PASSWORD)) {
+				builder.setAuthDescriptor(new AuthDescriptor(new String[] { "PLAIN" }, new PlainCallbackHandler(
+						Configurations.MEMCACHED_USERNAME, Configurations.MEMCACHED_PASSWORD)));
+			}
 			this.client = new MemcachedClient(builder.build(), Collections.singletonList(
 					new InetSocketAddress(Configurations.MEMCACHED_HOST, Configurations.MEMCACHED_PORT)));
 		} catch (Exception e) {
@@ -94,18 +99,17 @@ public class SpyMemcacheClient {
 	 * @return
 	 */
 	public boolean flush() {
-		boolean res = true;
 		Future<Boolean> f = null;
 		try {
 			f = client.flush();
-			res = f.get(SOCKET_TIMEOUT, TimeUnit.MILLISECONDS);
+			return f.get(SOCKET_TIMEOUT, TimeUnit.MILLISECONDS);
 		} catch (Exception e) {
 			if (f != null) {
 				f.cancel(true);
 			}
 			e.printStackTrace();
+			return false;
 		}
-		return res;
 	}
 
 	/**
