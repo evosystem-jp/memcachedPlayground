@@ -34,12 +34,12 @@ public class SpyMemcachedClient {
 	/**
 	 * タイムアウト時間.
 	 */
-	private static final int CONNECTION_TIMEOUT = 500;
+	private static final int CONNECTION_TIMEOUT = 100000;
 
 	/**
 	 * タイムアウト時間.
 	 */
-	private static final int SOCKET_TIMEOUT = 500;
+	private static final int SOCKET_TIMEOUT = 100000;
 
 	/**
 	 * クライアントを取得.
